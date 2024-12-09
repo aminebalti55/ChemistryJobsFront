@@ -112,7 +112,7 @@ const JobList = () => {
   const fetchJobs = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://127.0.0.1:8000/jobs");
+      const response = await axios.get("https://chemistryjobs-1.onrender.com/jobs");
       setJobs(response.data);
       setFilteredJobs(response.data);
     } catch (error) {
@@ -124,7 +124,7 @@ const JobList = () => {
 
   const handleJobClick = async (jobLink) => {
     try {
-      await axios.post("http://127.0.0.1:8000/mark-job-clicked", { link: jobLink });
+      await axios.post("https://chemistryjobs-1.onrender.com/mark-job-clicked", { link: jobLink });
       fetchJobs();
     } catch (error) {
       console.error("Error marking job as clicked:", error);
