@@ -11,8 +11,78 @@ import {
   Zap,
   Star,
   Code,
-  Briefcase
+  Briefcase,
+  Layers
 } from "lucide-react";
+
+const GraphicBackground = ({ type = 'circuit' }) => {
+  const renderCircuitPattern = () => (
+    <svg 
+      className="absolute inset-0 w-full h-full opacity-10 text-purple-500" 
+      xmlns="http://www.w3.org/2000/svg" 
+      viewBox="0 0 800 600"
+    >
+      <defs>
+        <pattern id="circuitPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path 
+            d="M0 40 Q20 30 40 40 T80 40" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="1" 
+            strokeOpacity="0.2"
+          />
+          <path 
+            d="M0 40 Q20 50 40 40 T80 40" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="1" 
+            strokeOpacity="0.2"
+          />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#circuitPattern)" />
+    </svg>
+  );
+
+  const renderNodePattern = () => (
+    <svg 
+      className="absolute inset-0 w-full h-full opacity-20 text-purple-500" 
+      xmlns="http://www.w3.org/2000/svg" 
+      viewBox="0 0 800 600"
+    >
+      {[...Array(50)].map((_, i) => (
+        <React.Fragment key={i}>
+          <circle 
+            cx={Math.random() * 800} 
+            cy={Math.random() * 600} 
+            r={Math.random() * 3} 
+            fill="currentColor" 
+            opacity="0.3"
+          />
+          {Math.random() > 0.7 && (
+            <line 
+              x1={Math.random() * 800} 
+              y1={Math.random() * 600} 
+              x2={Math.random() * 800} 
+              y2={Math.random() * 600} 
+              stroke="currentColor" 
+              strokeWidth="0.5" 
+              opacity="0.1"
+            />
+          )}
+        </React.Fragment>
+      ))}
+    </svg>
+  );
+
+  const backgroundTypes = {
+    'circuit': renderCircuitPattern,
+    'nodes': renderNodePattern
+  };
+
+  return backgroundTypes[type]();
+};
+
 
 const NeonBadge = ({ children, variant = "purple", className = "" }) => {
   const variantStyles = {
@@ -62,20 +132,30 @@ const JobCard = ({ job, onJobClick }) => {
     >
       <div 
         className={`
-          relative overflow-hidden rounded-2xl 
-          bg-gradient-to-br from-gray-900 to-gray-800 
-          border border-transparent 
-          transition-all duration-300
+          relative 
+          overflow-hidden 
+          rounded-2xl 
+          bg-gradient-to-br 
+          from-gray-900 
+          to-gray-800 
+          border 
+          border-transparent 
+          transition-all 
+          duration-300
           ${isHovered 
             ? 'shadow-2xl border-purple-600/50 hover:shadow-purple-500/30' 
             : 'shadow-lg'
           }
         `}
       >
+        {/* Graphic Background */}
+        <GraphicBackground type={isHovered ? 'nodes' : 'circuit'} />
+
         {/* Neon Glow Effect */}
         <div 
           className={`
-            absolute inset-0 
+            absolute 
+            inset-0 
             bg-purple-500/10 
             opacity-0 
             group-hover:opacity-100 
@@ -86,20 +166,43 @@ const JobCard = ({ job, onJobClick }) => {
           `}
         />
 
-        <div className="relative z-10 p-6">
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex-grow">
+        <div className="relative z-10 p-6 overflow-hidden">
+          <div className="flex justify-between items-start mb-4 relative">
+            {/* Diagonal Gradient Accent */}
+            <div 
+              className="
+                absolute 
+                top-0 
+                right-0 
+                w-64 
+                h-64 
+                bg-gradient-to-br 
+                from-purple-500/20 
+                to-transparent 
+                rotate-45 
+                translate-x-1/2 
+                -translate-y-1/2
+                opacity-50
+                group-hover:opacity-70
+                transition-all
+                duration-500
+              "
+            />
+
+            <div className="flex-grow relative z-20">
               <a 
                 href={job.link} 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 onClick={handleJobClick}
                 className="
-                  text-xl font-bold 
+                  text-xl 
+                  font-bold 
                   text-purple-300 
                   hover:text-purple-200 
                   transition-colors 
-                  flex items-center 
+                  flex 
+                  items-center 
                   space-x-2
                 "
               >
@@ -123,17 +226,19 @@ const JobCard = ({ job, onJobClick }) => {
                 hover:text-purple-300 
                 transition-colors 
                 hover:scale-110
+                relative 
+                z-20
               "
             >
               <ExternalLink size={22} />
             </a>
           </div>
 
-          <p className="text-gray-300 mb-4 line-clamp-3 opacity-90">
+          <p className="text-gray-300 mb-4 line-clamp-3 opacity-90 relative z-20">
             {job.description}
           </p>
 
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center relative z-20">
             <div className="flex items-center space-x-4 text-gray-400">
               <div className="flex items-center space-x-2">
                 <MapPin size={18} className="text-purple-500" />
