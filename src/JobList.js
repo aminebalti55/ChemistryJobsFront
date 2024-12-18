@@ -277,17 +277,6 @@ const JobCard = ({ job, onJobClick }) => {
 };
 
 
-const refreshJobs = () => {
-  // Optional: Add a method to trigger job update on the backend
-  axios.get("https://chemistryjobs-1.onrender.com/update-jobs")
-    .then(() => {
-      fetchJobs(); // Refresh the job list
-    })
-    .catch(error => {
-      console.error("Error updating jobs:", error);
-    });
-};
-
 
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
@@ -309,7 +298,17 @@ const JobList = () => {
       setLoading(false);
     }
   };
-
+  const refreshJobs = () => {
+    // Optional: Add a method to trigger job update on the backend
+    axios.get("https://chemistryjobs-1.onrender.com/update-jobs")
+      .then(() => {
+        fetchJobs(); // Refresh the job list
+      })
+      .catch(error => {
+        console.error("Error updating jobs:", error);
+      });
+  };
+  
   const handleJobClick = async (jobLink) => {
     try {
       await axios.post("https://chemistryjobs-1.onrender.com/mark-job-clicked", { link: jobLink });
@@ -392,12 +391,7 @@ const JobList = () => {
           >
             SITE EL BABY
           </h1>
-          <button 
-  onClick={refreshJobs}
-  className="bg-purple-500 text-white p-2 rounded"
->
-  Refresh Jobs
-</button>
+          
           <div className="relative">
             <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 mb-4">
               <div className="relative w-full">
@@ -435,6 +429,13 @@ const JobList = () => {
                   " 
                 />
               </div>
+
+              <button 
+  onClick={refreshJobs}
+  className="bg-purple-500 text-white p-2 rounded"
+>
+  Refresh Jobs
+</button>
               <button 
                 onClick={() => setShowFilters(!showFilters)}
                 className="
